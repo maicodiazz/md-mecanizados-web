@@ -503,7 +503,8 @@ footer .wrap { align-items: center; }
         <a href="https://www.youtube.com/@mecanizadosdiaz" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></a>
       </div>
     </div>
-    <form class="quote" id="quote-form" novalidate>
+    <form class="quote" id="quote-form" action="enviar.php" method="post" enctype="multipart/form-data" novalidate>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <div class="field"><label for="f-name">Nombre</label><input id="f-name" name="name" autocomplete="name" required></div>
       <div class="field"><label for="f-company">Empresa</label><input id="f-company" name="company" autocomplete="organization"></div>
       <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
@@ -515,7 +516,7 @@ footer .wrap { align-items: center; }
       <div class="field full"><label for="f-file">Plano o modelo 3D</label><input id="f-file" name="file" type="file" accept=".pdf,.dwg,.dxf,.step,.stp,.igs,.iges,.jpg,.png"></div>
       <div class="form-note">PDF, DWG, DXF, STEP, IGES o imagen.</div>
       <div><button class="btn" type="submit">Solicitar presupuesto</button></div>
-      <div class="form-ok" id="form-ok" hidden>Esto es un prototipo: el formulario todavía no envía nada. En la web final llegará directamente a vuestro correo.</div>
+      <div class="form-ok" id="form-ok" role="status" hidden></div>
     </form>
   </div>
 </section>
@@ -529,10 +530,27 @@ footer .wrap { align-items: center; }
 </footer>
 
 <script>
-document.getElementById('quote-form').addEventListener('submit', function (e) {
-  e.preventDefault();
-  document.getElementById('form-ok').hidden = false;
-});
+(function () {
+  var form = document.getElementById('quote-form');
+  var out = document.getElementById('form-ok');
+  var btn = form.querySelector('button[type=submit]');
+  function show(msg) { out.textContent = msg; out.hidden = false; }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.name.value.trim() || !form.email.value.trim()) { show('Completá tu nombre y tu email para poder responderte.'); return; }
+    var f = form.file.files[0];
+    if (f && f.size > 8 * 1024 * 1024) { show('El archivo supera los 8 MB. Mandalo por WhatsApp o adjuntá una versión más liviana.'); return; }
+    btn.disabled = true; var label = btn.textContent; btn.textContent = 'Enviando…';
+    fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json().catch(function () { return { ok: false }; }); })
+      .then(function (d) {
+        if (d.ok) { form.reset(); show('¡Gracias! Recibimos tu pedido y te respondemos a la brevedad.'); }
+        else { show(d.error || 'No se pudo enviar. Escribinos por WhatsApp al +54 9 264 530-8659.'); }
+      })
+      .catch(function () { show('No se pudo enviar. Escribinos por WhatsApp al +54 9 264 530-8659.'); })
+      .then(function () { btn.disabled = false; btn.textContent = label; });
+  });
+})();
 </script>
 <script>
 (function () {
