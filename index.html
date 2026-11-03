@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
 <meta name="description" content="MD Mecanizados CNC: mecanizado CNC, importaciones y formación técnica en Rawson, San Juan, Argentina.">
 <link rel="icon" href="img/logo-mark.png">
 <title>MD Mecanizados CNC</title>
@@ -360,6 +360,11 @@ body { margin: 0; }
   .cl.s1 { font-size: 1.05rem !important; } .cl.s2 { font-size: .82rem !important; } .cl.s3 { font-size: 1rem !important; } .cl.s4 { font-size: .85rem !important; } .cl.s5 { font-size: 1.08rem !important; }
   .cl img { height: 22px; }
 }
+
+/* Evita que el celular se aleje (zoom out) por algo más ancho que la pantalla */
+html, body { overflow-x: clip; }
+.yt-player, .yt-item { width: 100%; contain: paint; }
+.yt-player iframe, .yt-item iframe { max-width: 100%; min-width: 0; }
 </style>
 
 <div class="demo-bar topbar">
