@@ -339,7 +339,24 @@ footer img { width: 180px; height: auto; display: block; }
 footer .wrap { align-items: center; }
 </style>
 
-<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Ajustes celular */
+body { margin: 0; }
+@media (max-width: 680px) {
+  .top .wrap { flex-wrap: nowrap; padding-block: 8px; gap: 12px; }
+  .logo-mark { width: 84px; }
+  nav.menu { width: auto; justify-content: flex-end; gap: 16px; flex-wrap: nowrap; }
+  nav.menu a { font-size: .8rem; }
+  .topbar { font-size: .74rem; padding-block: 4px; }
+  .topbar-inner { gap: 2px 18px; }
+  .topbar-addr { order: 3; width: 100%; justify-content: center; }
+  .topbar-addr span { font-size: .72rem; }
+  .clients { padding-block: 14px; }
+  .cl { height: 30px; font-size: 78% !important; }
+  .cl.s1 { font-size: 1.05rem !important; } .cl.s2 { font-size: .82rem !important; } .cl.s3 { font-size: 1rem !important; } .cl.s4 { font-size: .85rem !important; } .cl.s5 { font-size: 1.08rem !important; }
+  .cl img { height: 22px; }
+}
+</style>
 </head>
 <body>
 <div class="demo-bar topbar">
