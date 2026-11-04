@@ -461,6 +461,16 @@ form.quote { align-items: start; }
 .academy-close p { margin: 4px 0 0; color: var(--muted); }
 .academy-close .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (prefers-reduced-motion: reduce) { .mobile-cta { transition: none; } }
+/* Botón flotante de WhatsApp (escritorio y tablet; en celular está la barra de abajo) */
+.wa-float { position: fixed; right: max(24px, env(safe-area-inset-right, 0px)); bottom: max(24px, env(safe-area-inset-bottom, 0px)); z-index: 30; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.28); opacity: 0; transform: translateY(16px) scale(.9); pointer-events: none; transition: opacity .25s var(--ease-out), transform .25s var(--ease-out); -webkit-tap-highlight-color: transparent; }
+.wa-float.show { opacity: 1; transform: none; pointer-events: auto; }
+.wa-float svg { width: 32px; height: 32px; }
+.wa-float:active { transform: scale(.94); }
+.wa-float:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .wa-float:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.34); } }
+@media (max-width: 760px) { .wa-float { display: none; } .mobile-cta .btn.wa { background: #25d366; color: #0b2e17; border-color: #25d366; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .wa-float { transition: none; } }
+
 
 /* ===== Movimiento: "pasada de fresa" =====
    Las fotos se descubren de izquierda a derecha, como si una herramienta pasara por encima:
@@ -546,7 +556,7 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
 
 <div class="demo-bar topbar">
   <div class="topbar-inner">
-    <a href="https://wa.me/5492645308659" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg><span>+54 9 264 530-8659</span></a>
+    <a href="https://wa.me/5492646728955?text=Hola%20MD%20Mecanizados%2C%20quiero%20hacer%20una%20consulta." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg><span>+54 9 264 530-8659</span></a>
     <a class="topbar-addr" href="https://www.google.com/maps/search/?api=1&amp;query=Rep%C3%BAblica+del+L%C3%ADbano+1472+Oeste+Rawson+San+Juan+Argentina" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg><span>República del Líbano 1472 (O), Rawson, San Juan</span></a>
     <span class="topbar-social">
       <a href="https://www.instagram.com/mecanizados_diaz" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.3.8-.4.4-.6.8-.8 1.3-.2.4-.3 1-.4 2.1C2.6 9.9 2.6 10.3 2.6 12s0 3.5.1 4.7c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.3.4.4.8.6 1.3.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.3-.8.4-.4.6-.8.8-1.3.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.3-.4-.4-.8-.6-1.3-.8-.4-.2-1-.3-2.1-.4C15.5 4 15.1 4 12 4zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2zm6.3-8.2a1.1 1.1 0 1 1-2.3 0 1.1 1.1 0 0 1 2.3 0z"/></svg></a>
@@ -698,7 +708,7 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
       <h2>Pedí tu <span>presupuesto</span></h2>
       <p class="lead">Contanos qué necesitás y adjuntá tu plano o una foto de la pieza. Te respondemos en un plazo máximo de 48 horas hábiles.</p>
       <dl>
-        <div><dt>Teléfono / WhatsApp</dt><dd><a href="https://wa.me/5492645308659" target="_blank" rel="noopener">+54 9 264 530-8659</a></dd></div>
+        <div><dt>Teléfono / WhatsApp</dt><dd><a href="https://wa.me/5492646728955?text=Hola%20MD%20Mecanizados%2C%20quiero%20hacer%20una%20consulta." target="_blank" rel="noopener">+54 9 264 530-8659</a></dd></div>
         <div><dt>Dirección</dt><dd>República del Líbano 1472 (O), Rawson, San Juan, Argentina</dd></div>
       </dl>
       <div class="contact-social">
@@ -725,8 +735,9 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
   </div>
 </section>
 
+<a class="wa-float" id="wa-float" href="https://wa.me/5492646728955?text=Hola%20MD%20Mecanizados%2C%20quiero%20hacer%20una%20consulta." target="_blank" rel="noopener" aria-label="Escribinos por WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg></a>
 <div class="mobile-cta" id="mobile-cta" aria-label="Contacto rápido">
-  <a class="btn navy" href="https://wa.me/5492645308659" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>WhatsApp</a>
+  <a class="btn navy wa" href="https://wa.me/5492646728955?text=Hola%20MD%20Mecanizados%2C%20quiero%20hacer%20una%20consulta." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>WhatsApp</a>
   <a class="btn" href="#contacto">Pedir presupuesto</a>
 </div>
 <footer>
@@ -781,8 +792,9 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
   var start = document.querySelector('.hero, .academy-page .block-head');
   var contact = document.getElementById('contacto');
   var pastStart = false, atContact = false;
-  function upd() { bar.classList.toggle('show', pastStart && !atContact); }
-  if (!('IntersectionObserver' in window)) { bar.classList.add('show'); return; }
+  var fab = document.getElementById('wa-float');
+  function upd() { bar.classList.toggle('show', pastStart && !atContact); if (fab) fab.classList.toggle('show', pastStart); }
+  if (!('IntersectionObserver' in window)) { bar.classList.add('show'); if (fab) fab.classList.add('show'); return; }
   if (start) new IntersectionObserver(function (e) { pastStart = !e[0].isIntersecting; upd(); }).observe(start); else { pastStart = true; }
   if (contact) new IntersectionObserver(function (e) { atContact = e[0].isIntersecting; upd(); }, { rootMargin: '0px 0px -30% 0px' }).observe(contact);
   upd();
