@@ -413,6 +413,12 @@ nav.menu a:hover { color: var(--muted); }
 .field.invalid input, .field.invalid select, .field.invalid textarea { border-color: #c4271b; box-shadow: 0 0 0 1px #c4271b; }
 .field-error { display: block; margin-top: 6px; color: #b3241a; font-size: .82rem; font-weight: 500; }
 .form-ok { display: flex; gap: 10px; align-items: flex-start; border: 1px solid #1e7a46; border-left-width: 1px; background: #e8f5ed; color: #14532d; font-weight: 500; }
+.form-ok[hidden] { display: none; }
+/* Formulario con la misma letra que el resto de la página */
+.field label, .contact-info dt { font-family: var(--body); font-size: .9rem; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--text); }
+.field input[type=file] { font: inherit; font-size: .9rem; color: var(--muted); }
+.field input[type=file]::file-selector-button { font: inherit; font-weight: 600; font-size: .9rem; margin-right: 12px; padding: 8px 14px; border: 0; background: var(--navy, #0b0f66); color: #fff; cursor: pointer; }
+.field input::placeholder, .field textarea::placeholder { font-family: inherit; }
 .form-ok.error { border-color: #c4271b; background: #fdecea; color: #8a1c13; }
 .form-ok::before { content: ""; flex: 0 0 18px; height: 18px; margin-top: 2px; background: currentColor; -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
   --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E"); }
