@@ -514,8 +514,8 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
   .hero-title .ht-text { white-space: normal; }
 }
 @media (max-width: 760px) {
-  .hero .hero-photo { aspect-ratio: 4 / 3.3; object-position: 54% 30%; }
-  .hero-inner::before { height: 82.5vw; }
+  .hero .hero-photo { aspect-ratio: 4 / 3; object-position: 54% 30%; }
+  .hero-inner::before { height: 75vw; }
   .hero-copy { padding: 0 max(16px, env(safe-area-inset-left, 0px)) 22px; }
   .hero-text { font-size: .95rem; }
   .hero-title { font-size: clamp(1.8rem, 9vw, 2.6rem); }
@@ -563,7 +563,7 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
 
 <section class="hero" id="inicio">
   <div class="hero-inner">
-    <img class="hero-photo" src="img/portada-limpia.jpg" srcset="img/portada-limpia-1200.jpg 1200w, img/portada-limpia.jpg 1983w" sizes="100vw" alt="Maico Díaz, de MD Mecanizados CNC, junto a un centro de mecanizado en funcionamiento" width="1983" height="793" fetchpriority="high">
+    <img class="hero-photo" src="img/portada-limpia.jpg" srcset="img/portada-limpia-1200.jpg 1200w, img/portada-limpia.jpg 1983w" sizes="(max-width: 760px) 210vw, (max-width: 1024px) 125vw, 100vw" alt="Maico Díaz, de MD Mecanizados CNC, junto a un centro de mecanizado en funcionamiento" width="1983" height="793" fetchpriority="high">
     <div class="hero-copy">
       <h1 class="hero-title"><span class="ht-line"><span class="ht-text">MD Mecanizados <em>CNC</em></span><span class="ht-edge" aria-hidden="true"></span></span></h1>
       <p class="hero-sub">Tecnología y soluciones para la industria</p>
