@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
 <title>Academia MD Mecanizados</title>
+<meta name="description" content="Academia de MD Mecanizados CNC: formamos operarios CNC para la minería y la industria de San Juan. Clases en YouTube.">
+<link rel="icon" href="img/logo-mark.png">
+<meta name="theme-color" content="#a83c10">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -361,6 +364,95 @@ body { margin: 0; }
 html, body { overflow-x: clip; }
 .yt-player, .yt-item { width: 100%; contain: paint; }
 .yt-player iframe, .yt-item iframe { max-width: 100%; min-width: 0; }
+
+/* ===== Mejoras 2026-11-04 (revisión de diseño) ===== */
+:root { --btn-orange: #c94100; --ease-out: cubic-bezier(.23, 1, .32, 1); }
+html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+::selection { background: rgba(247, 80, 0, .28); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* Botones: contraste AA, respuesta al tocar, hover solo con mouse */
+.btn { background: linear-gradient(135deg, var(--btn-orange), var(--rust)); transition: transform .14s var(--ease-out), filter .2s ease; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+.btn:hover, .btn.ghost:hover, .btn.navy:hover { transform: none; background: linear-gradient(135deg, var(--btn-orange), var(--rust)); }
+.btn.ghost:hover, .btn.navy:hover { background: linear-gradient(135deg, var(--navy-hi), var(--navy)); }
+.btn:active { transform: scale(.97); }
+.yt-btn:hover { transform: none; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.45); }
+.yt-btn { transition: transform .14s var(--ease-out), background .2s ease, border-color .2s ease; touch-action: manipulation; }
+.yt-btn:active { transform: scale(.97); }
+.work { touch-action: manipulation; }
+.work img { transition: transform .25s var(--ease-out); }
+.work:hover img { transform: none; }
+.work:focus-visible img { transform: scale(1.04); }
+.work:active img { transform: scale(.98); }
+.contact-social a:hover { background: var(--navy); }
+.contact-social a:active { transform: scale(.94); }
+.cl:hover { opacity: .85; color: #55504e; }
+nav.menu a:hover { color: var(--muted); }
+.topbar a:hover { text-decoration: none; }
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover { filter: brightness(1.12); }
+  .btn.ghost:hover, .btn.navy:hover { filter: brightness(1.25); }
+  .yt-btn:hover { background: linear-gradient(135deg, var(--btn-orange), var(--rust)); border-color: transparent; }
+  .work:hover img { transform: scale(1.04); }
+  .contact-social a:hover { background: var(--btn-orange); }
+  .cl:hover { opacity: 1; color: #171312; }
+  nav.menu a:hover { color: var(--text); }
+  .topbar a:hover { text-decoration: underline; }
+}
+/* Franja de clientes: se pausa también al tocar o con el teclado */
+.marquee.paused .track, .clients:focus-within .track { animation-play-state: paused; }
+.marquee { cursor: pointer; }
+.marquee:hover:not(.paused) .track { animation-play-state: running; }
+@media (hover: hover) and (pointer: fine) { .marquee:hover:not(.paused) .track { animation-play-state: paused; } }
+/* Textos chicos: mínimo ~12,5 px */
+.tag, .contact-info dt, .field label { font-size: .78rem; }
+/* Formulario: 16 px en campos (evita el zoom del iPhone), errores claros */
+.field input, .field textarea, .field select { font-size: 1rem; }
+.field input[type=file] { font-size: .9rem; }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color: #c4271b; box-shadow: 0 0 0 1px #c4271b; }
+.field-error { display: block; margin-top: 6px; color: #b3241a; font-size: .82rem; font-weight: 500; }
+.form-ok { display: flex; gap: 10px; align-items: flex-start; border: 1px solid #1e7a46; border-left-width: 1px; background: #e8f5ed; color: #14532d; font-weight: 500; }
+.form-ok.error { border-color: #c4271b; background: #fdecea; color: #8a1c13; }
+.form-ok::before { content: ""; flex: 0 0 18px; height: 18px; margin-top: 2px; background: currentColor; -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E"); }
+.form-ok.error::before { --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2zm0-4h-2V7h2z'/%3E%3C/svg%3E"); }
+.btn[disabled] { opacity: .7; cursor: progress; }
+.btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+form.quote { align-items: start; }
+.field { align-content: start; }
+/* Visor de fotos: anterior / siguiente */
+.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; display: grid; place-items: center; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 50%; cursor: pointer; touch-action: manipulation; }
+.lightbox-nav svg { width: 22px; height: 22px; }
+.lightbox-nav.prev { left: max(12px, env(safe-area-inset-left, 0px)); }
+.lightbox-nav.next { right: max(12px, env(safe-area-inset-right, 0px)); }
+.lightbox-nav:active { transform: translateY(-50%) scale(.94); }
+.lightbox-close { min-width: 48px; min-height: 48px; }
+.lightbox:not([hidden]) { animation: lb-in .2s var(--ease-out); }
+@keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
+.lightbox:not([hidden]) img { animation: lb-img .22s var(--ease-out); }
+@keyframes lb-img { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+/* Barra fija de contacto en celular */
+.mobile-cta { display: none; }
+@media (max-width: 760px) {
+  .mobile-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 8px max(12px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px)); background: rgba(18,16,16,.94); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,.1); transform: translateY(110%); transition: transform .25s var(--ease-out); }
+  .mobile-cta.show { transform: none; }
+  .mobile-cta .btn { justify-content: center; padding: 12px 10px; font-size: .95rem; min-height: 48px; }
+  .mobile-cta svg { width: 18px; height: 18px; flex-shrink: 0; }
+  footer { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+/* Menú en celulares chicos */
+@media (max-width: 380px) {
+  .logo-mark { width: 64px; }
+  nav.menu { gap: 12px; }
+  nav.menu a { font-size: .74rem; }
+  .top .wrap { gap: 8px; }
+}
+@media (max-width: 680px) { .topbar { font-size: .78rem; } .topbar-addr span { font-size: .76rem; } nav.menu a { padding-block: 10px; } }
+/* Cierre de la academia */
+.academy-close { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: center; justify-content: space-between; padding: 28px clamp(20px, 4vw, 40px); background: var(--steel-800); border: 1px solid var(--line); }
+.academy-close h3 { margin: 0; font-size: clamp(1.2rem, 2.4vw, 1.6rem); line-height: 1.2; }
+.academy-close p { margin: 4px 0 0; color: var(--muted); }
+.academy-close .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+@media (prefers-reduced-motion: reduce) { .mobile-cta { transition: none; } }
 </style>
 </head>
 <body>
@@ -390,7 +482,7 @@ html, body { overflow-x: clip; }
 <section class="block light academy-page" id="academia">
   <div class="wrap">
     <div class="block-head">
-      <div><div class="eyebrow">Nuestra academia</div><h2>Formamos a la industria <span>de nuestra provincia</span></h2></div>
+      <div><h2>Formamos a la industria <span>de nuestra provincia</span></h2></div>
       <div class="academy-intro">
         <p class="lead">Nuestra academia nace de una necesidad de nuestra provincia: formar profesionales capaces de responder a las exigencias de la minería y, con ella, de todo el sector industrial.</p>
         <p class="lead">Hoy nos acompaña en YouTube una comunidad de más de mil suscriptores que aprenden CNC con nosotros.</p>
@@ -406,9 +498,23 @@ html, body { overflow-x: clip; }
       <div class="yt-item" data-video="St1akMMFNX0"></div>
       <div class="yt-item" data-video="1W2ljlJc7PE"></div>
     </div>
+    <div class="academy-close">
+      <div>
+        <h3>¿Necesitás una pieza mecanizada?</h3>
+        <p>Mandanos tu plano o una foto y te cotizamos en 48 horas hábiles.</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="index.html#contacto">Pedir presupuesto</a>
+        <a class="btn navy" href="https://wa.me/5492645308659" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>WhatsApp</a>
+      </div>
+    </div>
   </div>
 </section>
 
+<div class="mobile-cta" id="mobile-cta" aria-label="Contacto rápido">
+  <a class="btn navy" href="https://wa.me/5492645308659" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>WhatsApp</a>
+  <a class="btn" href="index.html#contacto">Pedir presupuesto</a>
+</div>
 <footer>
   <div class="wrap">
     <img src="img/logo-full.png" alt="MD Mecanizados CNC" width="900" height="390">
@@ -416,6 +522,20 @@ html, body { overflow-x: clip; }
     <span class="mono">Mecanizado · Importaciones · Formación</span>
   </div>
 </footer>
+<script>
+(function () {
+  var bar = document.getElementById('mobile-cta'); if (!bar) return;
+  var start = document.querySelector('.hero, .academy-page .block-head');
+  var contact = document.getElementById('contacto');
+  var pastStart = false, atContact = false;
+  function upd() { bar.classList.toggle('show', pastStart && !atContact); }
+  if (!('IntersectionObserver' in window)) { bar.classList.add('show'); return; }
+  if (start) new IntersectionObserver(function (e) { pastStart = !e[0].isIntersecting; upd(); }).observe(start); else { pastStart = true; }
+  if (contact) new IntersectionObserver(function (e) { atContact = e[0].isIntersecting; upd(); }, { rootMargin: '0px 0px -30% 0px' }).observe(contact);
+  upd();
+  document.querySelectorAll('.marquee').forEach(function (m) { m.addEventListener('click', function () { m.classList.toggle('paused'); }); });
+})();
+</script>
 
 <script>
 (function () {

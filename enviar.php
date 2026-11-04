@@ -5,7 +5,7 @@ header('Content-Type: application/json; charset=utf-8');
 $DESTINO   = 'mecanizadosdiaz@live.com.ar';
 $REMITENTE = 'web@mdmecanizadoscnc.org';
 $MAX_BYTES = 8 * 1024 * 1024;
-$EXT_OK    = ['pdf','dwg','dxf','step','stp','igs','iges','jpg','jpeg','png'];
+$EXT_OK    = ['pdf','dwg','dxf','step','stp','igs','iges','sldprt','sldasm','x_t','zip','jpg','jpeg','png'];
 
 function salir($ok, $error = '') {
     echo json_encode($ok ? ['ok' => true] : ['ok' => false, 'error' => $error]);
@@ -31,6 +31,10 @@ $mensaje  = campo('msg', 5000);
 if ($nombre === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     salir(false, 'Revisá tu nombre y que el email esté bien escrito.');
 }
+if ($cantidad !== '' && !preg_match('/^[1-9][0-9]{0,6}$/', $cantidad)) {
+    salir(false, 'La cantidad tiene que ser un número entero mayor que 0.');
+}
+if ($material === '') $material = '(sin indicar)';
 
 $texto = "Nuevo pedido de presupuesto desde la web\n\n"
        . "Nombre:      $nombre\n"
@@ -51,7 +55,7 @@ if ($adj && $adj['error'] === UPLOAD_ERR_OK && $adj['size'] > 0) {
     if ($adj['size'] > $MAX_BYTES) salir(false, 'El archivo supera los 8 MB.');
     $nombreArch = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($adj['name']));
     $ext = strtolower(pathinfo($nombreArch, PATHINFO_EXTENSION));
-    if (!in_array($ext, $EXT_OK, true)) salir(false, 'Tipo de archivo no permitido.');
+    if (!in_array($ext, $EXT_OK, true)) salir(false, 'Ese tipo de archivo no lo podemos recibir. Mandá PDF, DWG, DXF, STEP, IGES, SolidWorks, ZIP o una foto.');
     $datos = chunk_split(base64_encode(file_get_contents($adj['tmp_name'])));
     $limite = 'md_' . md5(uniqid('', true));
     $headers .= "Content-Type: multipart/mixed; boundary=\"$limite\"\r\n";
