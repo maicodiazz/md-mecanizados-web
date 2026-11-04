@@ -455,6 +455,35 @@ form.quote { align-items: start; }
 .academy-close p { margin: 4px 0 0; color: var(--muted); }
 .academy-close .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (prefers-reduced-motion: reduce) { .mobile-cta { transition: none; } }
+
+/* ===== Movimiento: "pasada de fresa" =====
+   Las fotos se descubren de izquierda a derecha, como si una herramienta pasara por encima:
+   una tapa del color de la sección se corre con un filo naranja adelante.
+   Todo es visible por defecto; solo se tapa si el script de movimiento arrancó (html.motion). */
+:root { --ease-cut: cubic-bezier(.16, 1, .3, 1); }
+html.motion .cover { position: relative; overflow: hidden; }
+html.motion .cover::after {
+  content: ""; position: absolute; inset: 0 -2px 0 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(90deg, #ffd2b8 0, #ff7a2e 2px, rgba(247,80,0,.35) 3px, rgba(247,80,0,0) 28px, var(--steel-900) 28px);
+  transform: translateX(-28px); }
+html.motion .cover.in::after { transform: translateX(100%); transition: transform .8s var(--ease-cut) var(--d, 0ms); }
+html.motion .cover > img { transform: scale(1.08); }
+html.motion .cover.in > img { transform: none; transition: transform 1.2s var(--ease-cut) var(--d, 0ms); }
+/* máquinas: la foto se recorta desde su lado y el texto llega después */
+html.motion .machine.pending .machine-photo { clip-path: inset(0 100% 0 0); transform: scale(1.06); }
+html.motion .machine.pending.rev .machine-photo { clip-path: inset(0 0 0 100%); }
+html.motion .machine.pending .machine-body { opacity: 0; transform: translateY(10px); }
+html.motion .machine.pending.in .machine-photo { clip-path: inset(0 0 0 0); transform: none; transition: clip-path .8s var(--ease-cut) var(--d, 0ms), transform 1.2s var(--ease-cut) var(--d, 0ms); }
+html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; transition: opacity .5s ease calc(var(--d, 0ms) + .25s), transform .7s var(--ease-cut) calc(var(--d, 0ms) + .25s); }
+@media (max-width: 480px) { html.motion .machine.pending.rev .machine-photo { clip-path: inset(0 100% 0 0); } }
+@media (prefers-reduced-motion: reduce) {
+  html.motion .cover::after { background: var(--steel-900); transform: none; opacity: 1; }
+  html.motion .cover.in::after { opacity: 0; transform: none; transition: opacity .35s ease; }
+  html.motion .cover > img, html.motion .cover.in > img { transform: none; }
+  html.motion .machine.pending .machine-photo, html.motion .machine.pending.rev .machine-photo { clip-path: none; transform: none; opacity: 0; }
+  html.motion .machine.pending.in .machine-photo { opacity: 1; transition: opacity .35s ease; }
+  html.motion .machine.pending .machine-body { transform: none; }
+}
 </style>
 
 <div class="demo-bar topbar">
@@ -644,6 +673,45 @@ form.quote { align-items: start; }
     <span class="mono">Mecanizado · Importaciones · Formación</span>
   </div>
 </footer>
+<script>
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var targets = [];
+  document.querySelectorAll('.works .work, .yt-list .yt-item').forEach(function (el) {
+    if (el.getBoundingClientRect().top < innerHeight * .9) return; // lo que ya se ve al cargar no se tapa
+    el.classList.add('cover'); targets.push(el); });
+  document.querySelectorAll('#maquinaria .machine').forEach(function (m) {
+    if (m.getBoundingClientRect().top < innerHeight * .9) return;
+    m.classList.add('pending'); targets.push(m); });
+  if (!targets.length) return;
+  document.documentElement.classList.add('motion');
+  var batch = [], raf = null;
+  // espera a que la foto esté cargada (máx. 1,5 s) para que la pasada no ocurra sobre un hueco
+  function ready(el, cb) {
+    var imgs = Array.prototype.filter.call(el.querySelectorAll('img').length ? el.querySelectorAll('img') : [], function (im) { return !im.complete; });
+    if (!imgs.length) return cb();
+    var left = imgs.length, fired = false;
+    function one() { if (--left <= 0 && !fired) { fired = true; cb(); } }
+    imgs.forEach(function (im) { im.loading = 'eager'; im.addEventListener('load', one, { once: true }); im.addEventListener('error', one, { once: true }); });
+    setTimeout(function () { if (!fired) { fired = true; cb(); } }, 1500);
+  }
+  function done(el) { el.classList.remove('cover', 'pending', 'in'); el.style.removeProperty('--d'); }
+  function flush() {
+    batch.sort(function (a, b) { var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(); return (ra.top - rb.top) || (ra.left - rb.left); });
+    batch.forEach(function (el, i) { var d = Math.min(i * 70, 420); el.style.setProperty('--d', d + 'ms');
+      ready(el, function () { el.classList.add('in'); setTimeout(function () { done(el); }, d + 1300); }); }); // al terminar vuelven los efectos normales
+    batch = []; raf = null;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); batch.push(e.target); } });
+    if (batch.length && !raf) raf = requestAnimationFrame(flush);
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+  var pre = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { pre.unobserve(e.target); e.target.querySelectorAll('img').forEach(function (im) { im.loading = 'eager'; }); } }); }, { rootMargin: '600px 0px' });
+  targets.forEach(function (t) { pre.observe(t); });
+  targets.forEach(function (t) { io.observe(t); });
+  window.addEventListener('beforeprint', function () { targets.forEach(done); });
+})();
+</script>
 <script>
 (function () {
   var bar = document.getElementById('mobile-cta'); if (!bar) return;
