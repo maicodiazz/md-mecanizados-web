@@ -702,6 +702,71 @@ section.block.cas-block { padding-block: 0 72px; }
 #casillas .card > .card-right { grid-column: 2; }
 #casillas .card.wide > .card-left, #casillas .card.wide > .card-right { grid-column: 1 / -1; }
 #casillas .card.wide > .card-left { grid-template-columns: minmax(0, 420px); }
+
+/* Resultados a la derecha y fijos mientras cargás los datos */
+@media (min-width: 761px) {
+  #casillas .card:not(.wide) > .card-right { position: sticky; top: calc(var(--hdr, 72px) + var(--tabs, 58px) + 16px); }
+}
+/* En celular: dibujo, datos, resultados y al final la ayuda, con menos scroll */
+@media (max-width: 760px) {
+  #casillas .card > .card-left, #casillas .card > .card-right { display: contents; }
+  #casillas .card > .hd { order: 0; }
+  #casillas .card .howto.fig { order: 1; padding: 8px; }
+  #casillas .card .howto.fig svg.figura { max-height: 150px; }
+  #casillas .card .fields { order: 2; }
+  #casillas .card .ro { order: 3; }
+  #casillas .card .sol { order: 4; }
+  #casillas .card details.howto { order: 5; }
+  #casillas .card > .list { order: 6; }
+}
+#casillas details.howto summary { flex-wrap: nowrap; }
+#casillas details.howto summary .hint { white-space: nowrap; }
+@media (max-width: 1180px) { #casillas details.howto summary .hint { display: none; } }
+
+/* Dibujos más chicos para scrollear menos */
+#casillas .howto.fig { padding: 10px; }
+#casillas svg.figura { max-height: 170px; width: auto; max-width: 100%; }
+.calc-toggle { display: none; }
+@media (max-width: 980px) {
+  .calc-nav { display: block; }
+  .calc-nav .calc-nav-t { display: none; }
+  .calc-toggle { display: flex; width: 100%; align-items: center; gap: 12px; font: inherit; text-align: left; background: #fff; color: var(--text); border: 1px solid var(--steel-500); border-left: 3px solid var(--accent); padding: 10px 44px 10px 14px; min-height: 56px; position: relative; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+  .calc-toggle::after { content: ""; position: absolute; right: 18px; top: 50%; width: 9px; height: 9px; border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy); transform: translateY(-70%) rotate(45deg); transition: transform .2s var(--ease-out); }
+  .calc-toggle[aria-expanded="true"]::after { transform: translateY(-30%) rotate(-135deg); }
+  .calc-toggle .ct-k { display: grid; font-size: .72rem; color: var(--muted); font-weight: 500; line-height: 1.2; flex: none; }
+  .calc-toggle .ct-n { font-weight: 600; color: var(--plan); }
+  .calc-toggle .ct-v { font-weight: 600; color: var(--navy); font-size: .95rem; line-height: 1.25; }
+  .calc-nav > .calc-btn { display: none; }
+  .calc-nav.open { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .calc-nav.open .calc-toggle { grid-column: 1 / -1; }
+  .calc-nav.open > .calc-btn { display: block; animation: cas-fade .18s var(--ease-out) both; }
+}
+@media (max-width: 760px) {
+  .cas-hero { padding-block: 28px 24px; }
+  .cas-hero h1 { font-size: 2.1rem; }
+  .cas-hero p { font-size: .95rem; }
+  .cas-hero .cas-facts { gap: 4px 16px; font-size: .82rem; padding-top: 12px; margin-top: 2px; }
+  .cas-hero .cas-facts li:nth-child(n+3) { display: none; }
+  #casillas .panel { padding-top: 20px; }
+  #casillas .sec-head { margin-bottom: 14px; gap: 4px; }
+  #casillas .sec-head p { font-size: .88rem; line-height: 1.5; }
+  #casillas .card { padding: 16px 14px; gap: 12px; }
+  #casillas .card > .hd { padding-bottom: 10px; gap: 4px; }
+  #casillas .card > .hd p { font-size: .86rem; }
+  #casillas .card .howto.fig { padding: 6px; }
+  #casillas .card .howto.fig svg.figura { max-height: 112px; }
+  #casillas .fields { gap: 10px; }
+  #casillas label.f { font-size: .82rem; gap: 4px; }
+  #casillas label.f input, #casillas label.f select { min-height: 44px; padding: 9px 10px; }
+  #casillas .ro { padding: 4px 12px; }
+  #casillas .ro .r { padding: 7px 0; font-size: .84rem; }
+  #casillas .calc-pager button { font-size: .8rem; padding: 9px 10px; }
+  .cas-layout { gap: 12px; }
+}
+@media (max-width: 420px) { #casillas .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 340px) { #casillas .fields { grid-template-columns: 1fr; } }
+/* En celular el nombre ya está en el botón desplegable: no se repite */
+@media (max-width: 980px) { .cas-layout #casillas .card > .hd h3, .cas-layout .card > .hd h3 { display: none; } }
 </style>
 </head>
 <body>
@@ -2214,8 +2279,8 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
       var left = document.createElement('div'); left.className = 'card-left';
       var right = document.createElement('div'); right.className = 'card-right';
       [].slice.call(c.children).forEach(function (ch) {
-        if (ch.matches('.howto')) left.appendChild(ch);
-        else if (ch.matches('.fields, .ro, .sol')) right.appendChild(ch);
+        if (ch.matches('.howto, .fields')) left.appendChild(ch);
+        else if (ch.matches('.ro, .sol')) right.appendChild(ch);
       });
       var hd = c.querySelector(':scope > .hd');
       if (left.children.length) c.insertBefore(left, hd ? hd.nextSibling : c.firstChild);
@@ -2235,6 +2300,11 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
     var layout = document.createElement('div'); layout.className = 'cas-layout';
     var nav = document.createElement('nav'); nav.className = 'calc-nav'; nav.setAttribute('aria-label', 'Calculadoras de este capítulo');
     nav.innerHTML = '<div class="calc-nav-t">' + groups.length + ' calculadoras</div>';
+    // en celular la lista se despliega desde un botón para no ocupar media pantalla
+    var tog = document.createElement('button'); tog.type = 'button'; tog.className = 'calc-toggle'; tog.setAttribute('aria-expanded', 'false');
+    tog.innerHTML = '<span class="ct-k">Calculadora <span class="ct-n"></span></span><span class="ct-v"></span>';
+    tog.addEventListener('click', function () { var o = !nav.classList.contains('open'); nav.classList.toggle('open', o); tog.setAttribute('aria-expanded', o ? 'true' : 'false'); });
+    nav.insertBefore(tog, nav.firstChild); panel._tog = tog;
     var stage = document.createElement('div'); stage.className = 'calc-stage';
     grid.parentNode.insertBefore(layout, grid);
     layout.appendChild(nav); layout.appendChild(stage); stage.appendChild(grid);
@@ -2263,6 +2333,7 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
     var groups = panel._groups; if (!groups || groups.length < 2) return;
     var changed = panel._cur !== g;
     panel._cur = g;
+    if (panel._tog) { panel._tog.querySelector('.ct-v').textContent = g.title; panel._tog.querySelector('.ct-n').textContent = (g.index + 1) + ' de ' + groups.length; panel._nav.classList.remove('open'); panel._tog.setAttribute('aria-expanded', 'false'); }
     groups.forEach(function (x) {
       var on = x === g;
       x.btn.setAttribute('aria-current', on ? 'true' : 'false');
@@ -2313,6 +2384,28 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
     if (/^#casillas-/.test(startHash)) setTimeout(function () { measure(); root.scrollIntoView({ block: 'start' }); }, 60);
   }
 
+
+  // Peso de materiales: el dibujo cambia según la forma elegida
+  (function () {
+    var sel = document.getElementById('w-shape'), card = document.getElementById('c-w'); if (!sel || !card) return;
+    var svg = card.querySelector('svg.figura'); if (!svg) return;
+    var P = ' class="part" fill="currentColor" fill-opacity="0.08" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"';
+    var H = ' class="part" fill="currentColor" fill-opacity="0.22" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill-rule="evenodd"';
+    function dimH(x1, x2, y, t) { return '<line x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '" class="dim" stroke="currentColor" stroke-width="1"/><line x1="' + x1 + '" y1="' + (y - 5) + '" x2="' + x1 + '" y2="' + (y + 5) + '" class="dimt" stroke="currentColor" stroke-width="1"/><line x1="' + x2 + '" y1="' + (y - 5) + '" x2="' + x2 + '" y2="' + (y + 5) + '" class="dimt" stroke="currentColor" stroke-width="1"/><text x="' + ((x1 + x2) / 2) + '" y="' + (y + 17) + '" text-anchor="middle" class="dl" fill="currentColor" font-size="12" font-weight="600">' + t + '</text>'; }
+    function dimV(y1, y2, x, t) { return '<line x1="' + x + '" y1="' + y1 + '" x2="' + x + '" y2="' + y2 + '" class="dim" stroke="currentColor" stroke-width="1"/><line x1="' + (x - 5) + '" y1="' + y1 + '" x2="' + (x + 5) + '" y2="' + y1 + '" class="dimt" stroke="currentColor" stroke-width="1"/><line x1="' + (x - 5) + '" y1="' + y2 + '" x2="' + (x + 5) + '" y2="' + y2 + '" class="dimt" stroke="currentColor" stroke-width="1"/><text x="' + (x + 9) + '" y="' + ((y1 + y2) / 2 + 4) + '" class="dl" fill="currentColor" font-size="12" font-weight="600">' + t + '</text>'; }
+    function lbl(x, y, t) { return '<text x="' + x + '" y="' + y + '" text-anchor="middle" class="lbl" fill="currentColor" font-size="11" opacity=".75">' + t + '</text>'; }
+    var D = {
+      red: '<circle cx="150" cy="62" r="44"' + P + '/>' + dimH(106, 194, 124, 'Diámetro') + lbl(150, 66, 'barra redonda'),
+      cua: '<rect x="106" y="18" width="88" height="88"' + P + '/>' + dimH(106, 194, 124, 'Lado') + lbl(150, 66, 'barra cuadrada'),
+      hex: '<path d="M100 62 L125 18 H175 L200 62 L175 106 H125 Z"' + P + '/>' + dimV(18, 106, 214, 'Entre caras') + lbl(150, 66, 'hexagonal'),
+      pla: '<rect x="50" y="44" width="170" height="36"' + P + '/>' + dimH(50, 220, 104, 'Ancho') + dimV(44, 80, 232, 'Espesor') + lbl(135, 66, 'platina / planchuela'),
+      cha: '<path d="M40 70 L110 30 H270 L200 70 Z"' + P + '/><path d="M40 70 H200 V80 H40 Z M200 70 L270 30 V40 L200 80 Z"' + H + '/>' + dimH(40, 200, 104, 'Largo') + '<text x="248" y="62" class="dl" fill="currentColor" font-size="12" font-weight="600">Ancho</text>' + '<text x="12" y="80" class="dl" fill="currentColor" font-size="12" font-weight="600">Esp.</text>' + lbl(155, 54, 'chapa / placa'),
+      tub: '<path d="M106 62 a44 44 0 1 0 88 0 a44 44 0 1 0 -88 0 Z M118 62 a32 32 0 1 0 64 0 a32 32 0 1 0 -64 0 Z"' + H + '/>' + dimH(106, 194, 124, 'Diámetro exterior') + '<line x1="182" y1="62" x2="194" y2="62" class="dim" stroke="currentColor" stroke-width="1.4"/><line x1="182" y1="56" x2="182" y2="68" class="dimt" stroke="currentColor" stroke-width="1"/><line x1="194" y1="56" x2="194" y2="68" class="dimt" stroke="currentColor" stroke-width="1"/><text x="202" y="58" class="dl" fill="currentColor" font-size="12" font-weight="600">Espesor</text><text x="202" y="72" class="dl" fill="currentColor" font-size="12" font-weight="600">de pared</text>',
+      tur: '<path d="M70 20 H230 V104 H70 Z M82 32 V92 H218 V32 Z"' + H + '/>' + dimH(70, 230, 124, 'Lado A') + dimV(20, 104, 244, 'Lado B') + '<line x1="70" y1="62" x2="82" y2="62" class="dim" stroke="currentColor" stroke-width="1.4"/><line x1="70" y1="56" x2="70" y2="68" class="dimt" stroke="currentColor" stroke-width="1"/><line x1="82" y1="56" x2="82" y2="68" class="dimt" stroke="currentColor" stroke-width="1"/><text x="64" y="58" text-anchor="end" class="dl" fill="currentColor" font-size="12" font-weight="600">Espesor</text><text x="64" y="72" text-anchor="end" class="dl" fill="currentColor" font-size="12" font-weight="600">de pared</text>' + lbl(156, 66, 'tubo rectangular')
+    };
+    function draw() { var s = D[sel.value]; if (!s) return; svg.setAttribute('viewBox', '0 0 300 146'); svg.innerHTML = s; }
+    sel.addEventListener('change', draw); draw();
+  })();
   // la tabla de roscas lleva a la calculadora de arriba
   var rt = document.getElementById('rt-out');
   if (rt) rt.addEventListener('click', function (e) {
