@@ -767,6 +767,15 @@ section.block.cas-block { padding-block: 0 72px; }
 @media (max-width: 340px) { #casillas .fields { grid-template-columns: 1fr; } }
 /* En celular el nombre ya está en el botón desplegable: no se repite */
 @media (max-width: 980px) { .cas-layout #casillas .card > .hd h3, .cas-layout .card > .hd h3 { display: none; } }
+
+/* Engranaje recto: qué datos tenés */
+#casillas .gr-known { grid-column: 1 / -1; display: grid; gap: 10px; padding: 12px; background: #eef2fb; border: 1px solid #cdd7ec; }
+#casillas .gr-known select { font-weight: 600; color: var(--navy); }
+#casillas .gr-calc { font-size: .84rem; color: var(--text); line-height: 1.45; }
+#casillas .gr-calc b { color: var(--plan); }
+#casillas label.f.calc input { background: #fff1e8; border-color: #f3c9ad; color: #7a2a00; font-weight: 600; }
+#casillas label.f.calc::after { content: "calculado"; order: 1; font-size: .72rem; font-weight: 600; color: var(--plan); }
+#casillas label.f.calc input { order: 2; }
 </style>
 </head>
 <body>
@@ -2405,6 +2414,76 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
     };
     function draw() { var s = D[sel.value]; if (!s) return; svg.setAttribute('viewBox', '0 0 300 146'); svg.innerHTML = s; }
     sel.addEventListener('change', draw); draw();
+  })();
+
+  // Engranaje recto: elegir qué datos tenés y calcular el resto
+  (function () {
+    var card = document.getElementById('c-gr'), gm = document.getElementById('gr-m'), gz = document.getElementById('gr-z'), gc = document.getElementById('gr-c');
+    if (!card || !gm || !gz || !gc) return;
+    var fields = gm.closest('.fields'); if (!fields) return;
+    var MODS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.5, 5, 5.5, 6, 6.5, 7, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 25];
+    var MODES = {
+      mz: { t: 'Módulo y dientes' },
+      dez: { t: 'Diámetro exterior y dientes', x: 'Diámetro exterior De', out: 'm' },
+      dem: { t: 'Diámetro exterior y módulo', x: 'Diámetro exterior De', out: 'z' },
+      dpz: { t: 'Diámetro primitivo y dientes', x: 'Diámetro primitivo Dp', out: 'm' },
+      dpm: { t: 'Diámetro primitivo y módulo', x: 'Diámetro primitivo Dp', out: 'z' },
+      diz: { t: 'Diámetro de fondo y dientes', x: 'Diámetro interior Di', out: 'm' }
+    };
+    var wrap = document.createElement('div'); wrap.className = 'gr-known';
+    var opts = Object.keys(MODES).map(function (k) { return '<option value="' + k + '">' + MODES[k].t + '</option>'; }).join('');
+    wrap.innerHTML = '<label class="f full">¿Qué datos tenés?<select id="gr-k">' + opts + '</select></label>' +
+      '<label class="f full" id="gr-xl" hidden><span id="gr-xt"></span> <span class="u">mm</span><input id="gr-x" inputmode="decimal" value=""></label>' +
+      '<p class="gr-calc" id="gr-calc" hidden></p>';
+    fields.insertBefore(wrap, fields.firstChild);
+    var k = document.getElementById('gr-k'), xl = document.getElementById('gr-xl'), xt = document.getElementById('gr-xt'), x = document.getElementById('gr-x'), out = document.getElementById('gr-calc');
+    function n(el) { var s = (el.value || '').trim().replace(/\s+/g, '').replace(',', '.'); return s === '' ? NaN : Number(s); }
+    function f(v, d) { return isFinite(v) ? v.toLocaleString('es-AR', { maximumFractionDigits: d }) : '—'; }
+    function addendum() { // L = a·m + b  (b solo en dientes con paso diametral fijo)
+      var v = gc.value || '';
+      if (v === 'fel') { var fel = document.getElementById('gr-fel'); var ph = fel ? +fel.value.split('|')[1] : 0; return { a: 0, b: ph ? 25.4 / ph : 0, c: 0, d: ph ? 1.25 * 25.4 / ph : 0 }; }
+      var p = v.split('|').map(Number); return { a: p[0] || 1, b: 0, c: p[1] || 1.167, d: 0 };
+    }
+    var busy = false;
+    function lock(el, on) { el.readOnly = on; el.closest('label').classList.toggle('calc', on); }
+    function run(fromUser) {
+      var m = MODES[k.value];
+      xl.hidden = !m.x; if (m.x) xt.textContent = m.x;
+      lock(gm, m.out === 'm'); lock(gz, m.out === 'z');
+      if (!m.out) { out.hidden = true; return; }
+      var X = n(x), A = addendum(), mm = n(gm), z = n(gz), msg = '';
+      if (m.out === 'm') {
+        var M = NaN;
+        if (k.value === 'dez') M = (X - 2 * A.b) / (z + 2 * A.a);
+        if (k.value === 'dpz') M = X / z;
+        if (k.value === 'diz') M = (X + 2 * A.d) / (z - 2 * A.c);
+        if (isFinite(M) && M > 0) {
+          gm.value = String(+M.toFixed(4)).replace('.', ',');
+          var near = MODS.reduce(function (a, b) { return Math.abs(b - M) < Math.abs(a - M) ? b : a; });
+          msg = 'Módulo calculado: <b>' + f(M, 3) + '</b>' + (Math.abs(near - M) / M < 0.004 ? ' (normalizado)' : '. El normalizado más cercano es <b>' + f(near, 2) + '</b>; si la pieza es usada, medí De con cuidado o probá con el sistema inglés.');
+        } else { gm.value = ''; msg = 'Cargá el diámetro y el número de dientes.'; }
+      } else {
+        var Z = NaN;
+        if (k.value === 'dem') Z = (X - 2 * A.b) / mm - 2 * A.a;
+        if (k.value === 'dpm') Z = X / mm;
+        if (isFinite(Z) && Z > 0) {
+          var zr = Math.round(Z); gz.value = String(zr);
+          msg = 'N.º de dientes calculado: <b>' + f(Z, 2) + '</b>' + (Math.abs(Z - zr) > 0.05 ? ' → se toma <b>' + zr + '</b>. No da justo: revisá el módulo o la medida.' : '');
+        } else { gz.value = ''; msg = 'Cargá el diámetro y el módulo.'; }
+      }
+      out.innerHTML = msg; out.hidden = false;
+      if (fromUser && !busy) { busy = true; gm.dispatchEvent(new Event('input', { bubbles: true })); busy = false; }
+    }
+    k.addEventListener('change', function () {
+      var m = MODES[k.value];
+      if (m.x && !x.value) { // arranca con el valor actual para que se entienda
+        var d = document.getElementById(k.value.indexOf('de') === 0 ? 'gr-da' : k.value.indexOf('dp') === 0 ? 'gr-d' : 'gr-df');
+        if (d) x.value = (d.textContent || '').replace(/[^\d,.-]/g, '');
+      }
+      run(true);
+    });
+    x.addEventListener('input', function () { if (!busy) run(true); });
+    [gm, gz, gc].forEach(function (el) { el.addEventListener('input', function () { if (!busy && MODES[k.value].out && !el.readOnly) run(true); }); el.addEventListener('change', function () { if (!busy && MODES[k.value].out && !el.readOnly) run(true); }); });
   })();
   // la tabla de roscas lleva a la calculadora de arriba
   var rt = document.getElementById('rt-out');
