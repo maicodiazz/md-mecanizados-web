@@ -552,6 +552,9 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
 @media (prefers-reduced-motion: reduce) {
   .hero .hero-photo, .ht-text, .ht-edge, .hero-sub, .hero-rule, .hero-text, .hero .hero-cta { animation: none !important; }
 }
+/* Menú con tres opciones en celular: textos cortos */
+.menu .short { display: none; }
+@media (max-width: 680px) { .menu .full { display: none; } .menu .short { display: inline; } }
 </style>
 
 <div class="demo-bar topbar">
@@ -572,7 +575,8 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
     </a>
     <nav class="menu" aria-label="Principal">
       <a href="#quienes-somos">Quiénes somos</a>
-      <a href="academia.html">Nuestra academia</a>
+      <a href="academia.html"><span class="full">Nuestra academia</span><span class="short">Academia</span></a>
+      <a href="casillas.html"><span class="full">Casillas y algo más</span><span class="short">Casillas</span></a>
     </nav>
   </div>
 </header>
