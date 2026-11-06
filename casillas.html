@@ -779,6 +779,18 @@ section.block.cas-block { padding-block: 0 72px; }
 
 #casillas details.howto summary { white-space: nowrap; }
 #casillas details.howto summary .hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* Flechas de la barra de capítulos */
+#casillas .tabs-arrow { position: absolute; top: 0; bottom: 1px; z-index: 2; width: 52px; display: flex; align-items: center; border: 0; padding: 0; cursor: pointer; color: var(--navy); opacity: 0; pointer-events: none; transition: opacity .2s var(--ease-out); touch-action: manipulation; }
+#casillas .tabs-arrow svg { width: 26px; height: 26px; padding: 4px; border-radius: 50%; background: #fff; box-shadow: 0 1px 6px rgba(11,15,102,.25); }
+#casillas .tabs-arrow.prev { left: 0; justify-content: flex-start; padding-left: 6px; background: linear-gradient(90deg, #eaf0f7 45%, rgba(234,240,247,0)); }
+#casillas .tabs-arrow.next { right: 0; justify-content: flex-end; padding-right: 6px; background: linear-gradient(270deg, #eaf0f7 45%, rgba(234,240,247,0)); }
+#casillas nav.tabs.can-l .tabs-arrow.prev, #casillas nav.tabs.can-r .tabs-arrow.next { opacity: 1; pointer-events: auto; }
+#casillas nav.tabs.can-r .tabs-arrow.next svg { animation: tabs-nudge 1.6s var(--ease-out) .8s 2; }
+@keyframes tabs-nudge { 0%, 100% { transform: none; } 50% { transform: translateX(4px); } }
+@media (prefers-reduced-motion: reduce) { #casillas nav.tabs.can-r .tabs-arrow.next svg { animation: none; } }
+#casillas nav.tabs [role=tablist] { scroll-padding-inline: max(16px, env(safe-area-inset-left, 0px)); gap: 2px; }
+#casillas .tab { padding: 9px 14px; }
 </style>
 </head>
 <body>
@@ -2490,6 +2502,26 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
     });
     x.addEventListener('input', function () { if (!busy) run(true); });
     [gm, gz, gc].forEach(function (el) { el.addEventListener('input', function () { if (!busy && MODES[k.value].out && !el.readOnly) run(true); }); el.addEventListener('change', function () { if (!busy && MODES[k.value].out && !el.readOnly) run(true); }); });
+  })();
+
+  // Barra de capítulos: flechas que avisan que hay más a la izquierda o a la derecha
+  (function () {
+    var bar = root.querySelector('nav.tabs'), list = bar && bar.querySelector('[role=tablist]'); if (!list) return;
+    var ico = function (d) { return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'; };
+    var L = document.createElement('button'), R = document.createElement('button');
+    L.type = R.type = 'button'; L.className = 'tabs-arrow prev'; R.className = 'tabs-arrow next';
+    L.setAttribute('aria-label', 'Ver capítulos anteriores'); R.setAttribute('aria-label', 'Ver más capítulos');
+    L.innerHTML = ico('M15 5l-7 7 7 7'); R.innerHTML = ico('M9 5l7 7-7 7');
+    bar.appendChild(L); bar.appendChild(R);
+    function upd() {
+      var max = list.scrollWidth - list.clientWidth;
+      bar.classList.toggle('can-l', list.scrollLeft > 4);
+      bar.classList.toggle('can-r', list.scrollLeft < max - 4);
+    }
+    function go(dir) { list.scrollBy({ left: dir * list.clientWidth * .7, behavior: reduce ? 'auto' : 'smooth' }); }
+    L.addEventListener('click', function () { go(-1); }); R.addEventListener('click', function () { go(1); });
+    list.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd);
+    upd(); setTimeout(upd, 300);
   })();
   // la tabla de roscas lleva a la calculadora de arriba
   var rt = document.getElementById('rt-out');
