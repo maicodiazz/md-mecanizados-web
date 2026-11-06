@@ -697,7 +697,7 @@ section.block.cas-block { padding-block: 0 72px; }
 @media (max-width: 520px) { #casillas .howto-b { padding-left: 16px; } #casillas details.howto summary .hint { display: none; } }
 
 /* Dibujo + "Cómo se usa" juntos a la izquierda; datos y resultados a la derecha */
-#casillas .card > .card-left, #casillas .card > .card-right { display: grid; gap: 14px; align-content: start; min-width: 0; }
+#casillas .card > .card-left, #casillas .card > .card-right { display: grid; gap: 14px; align-content: start; min-width: 0; grid-template-columns: minmax(0, 1fr); }
 #casillas .card > .card-left { grid-column: 1; }
 #casillas .card > .card-right { grid-column: 2; }
 #casillas .card.wide > .card-left, #casillas .card.wide > .card-right { grid-column: 1 / -1; }
@@ -778,7 +778,8 @@ section.block.cas-block { padding-block: 0 72px; }
 #casillas label.f.calc input { order: 2; }
 
 #casillas details.howto summary { white-space: nowrap; }
-#casillas details.howto summary .hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+#casillas details.howto summary .hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+#casillas details.howto, #casillas details.howto summary { min-width: 0; }
 
 /* Flechas de la barra de capítulos */
 #casillas .tabs-arrow { position: absolute; top: 0; bottom: 1px; z-index: 2; width: 52px; display: flex; align-items: center; border: 0; padding: 0; cursor: pointer; color: var(--navy); opacity: 0; pointer-events: none; transition: opacity .2s var(--ease-out); touch-action: manipulation; }
