@@ -776,6 +776,9 @@ section.block.cas-block { padding-block: 0 72px; }
 #casillas label.f.calc input { background: #fff1e8; border-color: #f3c9ad; color: #7a2a00; font-weight: 600; }
 #casillas label.f.calc::after { content: "calculado"; order: 1; font-size: .72rem; font-weight: 600; color: var(--plan); }
 #casillas label.f.calc input { order: 2; }
+
+#casillas details.howto summary { white-space: nowrap; }
+#casillas details.howto summary .hint { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 </style>
 </head>
 <body>
@@ -2288,7 +2291,10 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
       var left = document.createElement('div'); left.className = 'card-left';
       var right = document.createElement('div'); right.className = 'card-right';
       [].slice.call(c.children).forEach(function (ch) {
-        if (ch.matches('.howto, .fields')) left.appendChild(ch);
+        // si la calculadora no tiene resultados (ej. "Tu cabezal divisor"), los datos van a la derecha del dibujo
+        var noOut = !c.querySelector(':scope > .ro, :scope > .sol');
+        if (ch.matches('.howto') || (ch.matches('.fields') && !noOut)) left.appendChild(ch);
+        else if (ch.matches('.fields')) right.appendChild(ch);
         else if (ch.matches('.ro, .sol')) right.appendChild(ch);
       });
       var hd = c.querySelector(':scope > .hd');
