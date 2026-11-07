@@ -823,7 +823,22 @@ section.block.cas-block { padding-block: 0 72px; }
   <div class="wrap">
     <h1 id="cas-title"><span class="ht-line"><span class="ht-text">Casillas <em>y algo más</em></span><span class="ht-edge" aria-hidden="true"></span></span></h1>
     <p>Las tablas y fórmulas del prontuario del mecánico Casillas, convertidas en calculadoras. Cargás tus medidas y el resultado sale al instante, desde el celular o la compu.</p>
-    <ul class="cas-facts"><li><b>44</b> calculadoras</li><li><b>7</b> capítulos</li><li>Con dibujo y explicación paso a paso</li><li>Gratis y sin registrarte</li></ul>
+    <ul class="cas-facts"><li id="cas-visitas" hidden><b>0</b> visitas</li><li><b>44</b> calculadoras</li><li><b>7</b> capítulos</li><li>Con dibujo y explicación paso a paso</li><li>Gratis y sin registrarte</li></ul>
+    <script>
+    /* Contador de visitas: suma una vez por día y por navegador */
+    (function () {
+      var li = document.getElementById('cas-visitas'); if (!li || !window.fetch) return;
+      var hoy = new Date().toISOString().slice(0, 10), nuevo = true;
+      try { nuevo = localStorage.getItem('casillas-visita') !== hoy; localStorage.setItem('casillas-visita', hoy); } catch (e) {}
+      var opt = nuevo ? { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'nuevo=1' } : {};
+      fetch('contador.php', opt).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        if (!d || !(d.total > 0)) return;
+        li.querySelector('b').textContent = d.total.toLocaleString('es-AR');
+        li.lastChild.textContent = d.total === 1 ? ' visita' : ' visitas';
+        li.hidden = false;
+      }).catch(function () {});
+    })();
+    </script>
   </div>
 </section>
 
