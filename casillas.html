@@ -339,6 +339,24 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 footer .mono { font-family: var(--mono); font-size: .75rem; }
 footer img { width: 180px; height: auto; display: block; }
 footer .wrap { align-items: center; }
+
+/* Donaciones: discreto, al pie de la lista y debajo de la calculadora en celular */
+.donate { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; }
+.donate svg { width: 20px; height: 20px; color: var(--accent); }
+.donate p { margin: 0; font-size: .82rem; line-height: 1.35; color: var(--muted); }
+.donate p b { color: var(--text); font-weight: 600; }
+.donate .alias { font-weight: 700; color: var(--navy); -webkit-user-select: all; user-select: all; }
+.donate-btn { font: inherit; border: 0; cursor: pointer; font-size: .85rem; font-weight: 600; color: #fff; background: var(--accent); text-decoration: none; padding: 8px 14px; white-space: nowrap; touch-action: manipulation; transition: transform .12s var(--ease-out), background-color .15s; }
+.donate-btn:active { transform: scale(.96); }
+@media (hover: hover) and (pointer: fine) { .donate-btn:hover { background: #d94600; } }
+.donate-btn:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+.donate.side { align-items: start; grid-template-columns: auto minmax(0, 1fr); margin: 10px 2px 2px; padding: 14px 10px 6px; border-top: 1px solid var(--line); }
+.donate.side p b { display: block; }
+.donate.side .donate-btn { grid-column: 1 / -1; justify-self: start; margin-top: 6px; background: transparent; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); }
+@media (hover: hover) and (pointer: fine) { .donate.side .donate-btn:hover { background: var(--accent); color: #fff; } }
+.donate.foot { display: none; background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: 10px 12px; }
+.donate-btn.done { background: #1f9d55 !important; color: #fff !important; box-shadow: none !important; }
+@media (max-width: 980px) { .donate.side { display: none; } .donate.foot { display: grid; } }
 </style>
 
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -2291,6 +2309,7 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
 </script>
 <script>
 /* Navegación de Casillas: un botón por calculadora, una calculadora a la vez */
+var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se muestra.
 (function () {
   var root = document.getElementById('casillas'); if (!root) return;
   var startHash = window.__casHash || '';
@@ -2360,6 +2379,23 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
       nav.appendChild(b); g.btn = b; g.index = i;
       b.addEventListener('click', function () { select(panel, g, true); });
     });
+    // enlace de donaciones: discreto, al pie de la lista (compu) y debajo de anterior/siguiente (celular)
+    if (DONAR) {
+      var heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.4 1.1 4.1 2.3h3c.7-1.2 2.1-2.3 4.1-2.3C21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>';
+      var link = '<button type="button" class="donate-btn" aria-label="Copiar el alias ' + DONAR + '">Copiar alias</button>';
+      var side = document.createElement('div'); side.className = 'donate side';
+      side.innerHTML = heart + '<p><b>¿Te sirven estas calculadoras?</b>Ayudanos a sumar más con una donación por Mercado Pago. Alias: <span class="alias">' + DONAR + '</span></p>' + link;
+      nav.appendChild(side);
+      var foot = document.createElement('div'); foot.className = 'donate foot';
+      foot.innerHTML = heart + '<p><b>¿Te sirvió?</b> Doná por Mercado Pago, alias <span class="alias">' + DONAR + '</span></p>' + link;
+      stage.appendChild(foot);
+      [side, foot].forEach(function (d) { var bt = d.querySelector('.donate-btn');
+        bt.addEventListener('click', function () {
+          function ok() { bt.textContent = '¡Copiado!'; bt.classList.add('done'); setTimeout(function () { bt.textContent = 'Copiar alias'; bt.classList.remove('done'); }, 2200); }
+          if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(DONAR).then(ok, sel); else sel();
+          function sel() { var r = document.createRange(), a = d.querySelector('.alias'); r.selectNodeContents(a); var w = getSelection(); w.removeAllRanges(); w.addRange(r); try { document.execCommand('copy'); ok(); } catch (e) {} }
+        }); });
+    }
     pager.querySelector('.prev').addEventListener('click', function () { var g = groups[panel._cur.index - 1]; if (g) select(panel, g, true); });
     pager.querySelector('.next').addEventListener('click', function () { var g = groups[panel._cur.index + 1]; if (g) select(panel, g, true); });
     panel._groups = groups; panel._pager = pager; panel._nav = nav;
