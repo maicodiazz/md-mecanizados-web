@@ -2295,7 +2295,7 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
 <script>
 (function () {
   var bar = document.getElementById('mobile-cta'); if (!bar) return;
-  var start = document.querySelector('.hero, .academy-page .block-head, .cas-hero');
+  var start = null; // en Casillas el botón de WhatsApp se ve desde que abre la página
   var contact = document.getElementById('contacto');
   var pastStart = false, atContact = false;
   var fab = document.getElementById('wa-float');
