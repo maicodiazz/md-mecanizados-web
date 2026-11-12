@@ -587,6 +587,10 @@ html.motion .machine.pending.in .machine-body { opacity: 1; transform: none; tra
 @media (max-width: 900px) { .shop-head { grid-template-columns: minmax(0, 1fr) auto; } .shop-title { grid-column: 1; grid-row: 1; } .shop .lead { grid-column: 1 / -1; grid-row: 2; } .shop-ctrl { grid-column: 2; grid-row: 1; align-self: end; } }
 @media (max-width: 600px) { .shop { --sh: min(52svh, 420px); padding-block: 44px 28px; } .shop .lead .more { display: none; } .shop h2 { font-size: clamp(1.4rem, 7.2vw, 2.4rem); white-space: nowrap; } .shop-head { gap: 12px 16px; margin-bottom: 20px; } .shop-btn { width: 42px; height: 42px; } .shop-count { display: none; } .shop .lead { font-size: .95rem; } .slide .cap { font-size: .85rem; padding: 40px 12px 12px; } .shop-track { gap: 8px; } }
 @media (prefers-reduced-motion: reduce) { .slide img, .slide .cap, .shop-progress span { transition: none; } }
+
+/* Al tocar un enlace del menú, la sección arranca justo debajo de la barra fija, sin quedar tapada */
+section[id] { scroll-margin-top: 78px; }
+@media (max-width: 680px) { section[id] { scroll-margin-top: 58px; } }
 </style>
 
 <div class="demo-bar topbar">
