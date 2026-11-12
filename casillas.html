@@ -2335,6 +2335,7 @@ $("idx").addEventListener("click",ev=>{const b=ev.target.closest("[data-go]");if
 <script>
 /* Navegación de Casillas: un botón por calculadora, una calculadora a la vez */
 var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se muestra.
+var TITULAR = 'Maico Pablo Exequiel Díaz'; // titular de la cuenta del alias
 (function () {
   var root = document.getElementById('casillas'); if (!root) return;
   var startHash = window.__casHash || '';
@@ -2409,10 +2410,10 @@ var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se
       var heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.4 1.1 4.1 2.3h3c.7-1.2 2.1-2.3 4.1-2.3C21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>';
       var link = '<button type="button" class="donate-btn" aria-label="Copiar el alias ' + DONAR + '">Copiar alias</button>';
       var side = document.createElement('div'); side.className = 'donate side';
-      side.innerHTML = heart + '<p><b>¿Te sirven estas calculadoras?</b>Ayudanos a sumar más con una donación por Mercado Pago (solo Argentina). Alias: <span class="alias">' + DONAR + '</span></p>' + link;
+      side.innerHTML = heart + '<p><b>¿Te sirven estas calculadoras?</b>Ayudanos a sumar más con una donación por Mercado Pago (solo Argentina). Alias: <span class="alias">' + DONAR + '</span><br>A nombre de ' + TITULAR + '</p>' + link;
       nav.appendChild(side);
       var foot = document.createElement('div'); foot.className = 'donate foot';
-      foot.innerHTML = heart + '<p><b>¿Te sirvió?</b> Doná por Mercado Pago (solo Argentina), alias <span class="alias">' + DONAR + '</span></p>' + link;
+      foot.innerHTML = heart + '<p><b>¿Te sirvió?</b> Doná por Mercado Pago (solo Argentina), alias <span class="alias">' + DONAR + '</span>, a nombre de ' + TITULAR + '</p>' + link;
       stage.appendChild(foot);
       [side, foot].forEach(function (d) { var bt = d.querySelector('.donate-btn');
         bt.addEventListener('click', function () {
@@ -2611,7 +2612,7 @@ var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se
 <aside class="free-note" id="free-note" role="dialog" aria-labelledby="fn-t" aria-hidden="true">
   <button type="button" class="fn-x" aria-label="Cerrar aviso">×</button>
   <h2 id="fn-t">Contenido <span>100% gratis</span></h2>
-  <p>Todas las calculadoras son libres y <b>nadie está obligado a pagar nada</b>. Si querés colaborar, existe <b>un solo alias</b> para donaciones voluntarias: <span class="alias">maicomec</span> (Mercado Pago, <b>solo desde Argentina</b>). Desconfiá de cualquier otro.</p>
+  <p>Todas las calculadoras son libres y <b>nadie está obligado a pagar nada</b>. Si querés colaborar, existe <b>un solo alias</b> para donaciones voluntarias: <span class="alias">maicomec</span>, a nombre de <b>Maico Pablo Exequiel Díaz</b> (Mercado Pago, <b>solo desde Argentina</b>). Desconfiá de cualquier otro.</p>
   <p class="fn-where-t">Está en el recuadro con el corazón <span class="fn-heart">♥</span>, <span class="fn-d">al pie de la lista de calculadoras</span><span class="fn-m">debajo de cada calculadora</span>.</p>
   <div class="fn-actions"><button type="button" class="fn-ok">Entendido</button><button type="button" class="fn-where">Ver dónde está</button></div>
 </aside>
