@@ -366,6 +366,16 @@ footer .wrap { align-items: center; }
 .free-note p { margin: 0; font-size: .86rem; line-height: 1.5; color: #cfc8c6; }
 .free-note p b { color: #fff; }
 .free-note .alias { color: #ff7a2e; font-weight: 700; }
+.free-note .fn-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.free-note .fn-where { font: inherit; font-size: .88rem; font-weight: 600; color: #fff; background: transparent; border: 1px solid rgba(255,255,255,.3); padding: 9px 14px; cursor: pointer; touch-action: manipulation; transition: transform .12s var(--ease-out); }
+.free-note .fn-where:active { transform: scale(.96); }
+.free-note .fn-where-t { font-size: .8rem; }
+.free-note .fn-heart { color: var(--accent); }
+.free-note .fn-m { display: none; }
+@media (max-width: 980px) { .free-note .fn-d { display: none; } .free-note .fn-m { display: inline; } }
+.donate.pulse { animation: don-pulse 1.4s var(--ease-out) .35s 2; }
+@keyframes don-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(247,80,0,0); } 40% { box-shadow: 0 0 0 6px rgba(247,80,0,.35); } }
+@media (prefers-reduced-motion: reduce) { .donate.pulse { animation: none; outline: 2px solid var(--accent); } }
 .free-note .fn-ok { justify-self: start; font: inherit; font-size: .88rem; font-weight: 600; color: #fff; background: var(--accent); border: 0; padding: 9px 18px; cursor: pointer; touch-action: manipulation; transition: transform .12s var(--ease-out); }
 .free-note .fn-ok:active { transform: scale(.96); }
 .free-note .fn-x { position: absolute; top: 8px; right: 8px; width: 36px; height: 36px; display: grid; place-items: center; background: none; border: 0; color: #a89e9a; font-size: 1.4rem; line-height: 1; cursor: pointer; }
@@ -2399,10 +2409,10 @@ var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se
       var heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.4 1.1 4.1 2.3h3c.7-1.2 2.1-2.3 4.1-2.3C21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>';
       var link = '<button type="button" class="donate-btn" aria-label="Copiar el alias ' + DONAR + '">Copiar alias</button>';
       var side = document.createElement('div'); side.className = 'donate side';
-      side.innerHTML = heart + '<p><b>¿Te sirven estas calculadoras?</b>Ayudanos a sumar más con una donación por Mercado Pago. Alias: <span class="alias">' + DONAR + '</span></p>' + link;
+      side.innerHTML = heart + '<p><b>¿Te sirven estas calculadoras?</b>Ayudanos a sumar más con una donación por Mercado Pago (solo Argentina). Alias: <span class="alias">' + DONAR + '</span></p>' + link;
       nav.appendChild(side);
       var foot = document.createElement('div'); foot.className = 'donate foot';
-      foot.innerHTML = heart + '<p><b>¿Te sirvió?</b> Doná por Mercado Pago, alias <span class="alias">' + DONAR + '</span></p>' + link;
+      foot.innerHTML = heart + '<p><b>¿Te sirvió?</b> Doná por Mercado Pago (solo Argentina), alias <span class="alias">' + DONAR + '</span></p>' + link;
       stage.appendChild(foot);
       [side, foot].forEach(function (d) { var bt = d.querySelector('.donate-btn');
         bt.addEventListener('click', function () {
@@ -2601,8 +2611,9 @@ var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se
 <aside class="free-note" id="free-note" role="dialog" aria-labelledby="fn-t" aria-hidden="true">
   <button type="button" class="fn-x" aria-label="Cerrar aviso">×</button>
   <h2 id="fn-t">Contenido <span>100% gratis</span></h2>
-  <p>Todas las calculadoras son libres y <b>nadie está obligado a pagar nada</b>. Si querés colaborar, existe <b>un solo alias</b> para donaciones voluntarias: <span class="alias">maicomec</span>. Desconfiá de cualquier otro.</p>
-  <button type="button" class="fn-ok">Entendido</button>
+  <p>Todas las calculadoras son libres y <b>nadie está obligado a pagar nada</b>. Si querés colaborar, existe <b>un solo alias</b> para donaciones voluntarias: <span class="alias">maicomec</span> (Mercado Pago, <b>solo desde Argentina</b>). Desconfiá de cualquier otro.</p>
+  <p class="fn-where-t">Está en el recuadro con el corazón <span class="fn-heart">♥</span>, <span class="fn-d">al pie de la lista de calculadoras</span><span class="fn-m">debajo de cada calculadora</span>.</p>
+  <div class="fn-actions"><button type="button" class="fn-ok">Entendido</button><button type="button" class="fn-where">Ver dónde está</button></div>
 </aside>
 <script>
 (function () {
@@ -2613,6 +2624,14 @@ var DONAR = 'maicomec'; // alias de Mercado Pago para donaciones. Vacío = no se
   function close() { n.classList.remove('show'); n.setAttribute('aria-hidden', 'true'); try { localStorage.setItem(K, String(Date.now())); } catch (e) {} }
   n.querySelector('.fn-ok').addEventListener('click', close);
   n.querySelector('.fn-x').addEventListener('click', close);
+  n.querySelector('.fn-where').addEventListener('click', function () {
+    close();
+    var side = matchMedia('(min-width: 981px)').matches, sel = side ? '.donate.side' : '.donate.foot';
+    var box = [].slice.call(document.querySelectorAll(sel)).filter(function (d) { return !d.closest('[hidden]'); })[0];
+    if (!box) return;
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    box.classList.remove('pulse'); void box.offsetWidth; box.classList.add('pulse');
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && n.classList.contains('show')) close(); });
   setTimeout(function () { n.classList.add('show'); n.setAttribute('aria-hidden', 'false'); }, 1200);
 })();
