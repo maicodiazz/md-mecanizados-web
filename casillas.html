@@ -2622,10 +2622,10 @@ var TITULAR = 'Maico Pablo Exequiel Díaz'; // titular de la cuenta del alias
 </aside>
 <script>
 (function () {
-  // Se muestra al entrar; si la persona lo cierra, no vuelve a aparecer por 7 días en ese navegador
+  // Se muestra una sola vez por navegador (clave nueva: también lo ven quienes ya habían entrado antes)
   var n = document.getElementById('free-note'); if (!n) return;
-  var K = 'casillas-aviso-gratis', now = Date.now();
-  try { var t = +localStorage.getItem(K); if (t && now - t < 7 * 864e5) return; } catch (e) {}
+  var K = 'casillas-aviso-v2';
+  try { if (localStorage.getItem(K)) return; } catch (e) {}
   var bk = document.getElementById('fn-back'), prevFocus = null;
   bk.addEventListener('click', function () { close(); });
   function close() { n.classList.remove('show'); bk.classList.remove('show'); n.setAttribute('aria-hidden', 'true'); if (prevFocus && prevFocus.focus) try { prevFocus.focus({ preventScroll: true }); } catch (e) {} try { localStorage.setItem(K, String(Date.now())); } catch (e) {} }
@@ -2640,7 +2640,7 @@ var TITULAR = 'Maico Pablo Exequiel Díaz'; // titular de la cuenta del alias
     box.classList.remove('pulse'); void box.offsetWidth; box.classList.add('pulse');
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && n.classList.contains('show')) close(); });
-  setTimeout(function () { prevFocus = document.activeElement; n.classList.add('show'); bk.classList.add('show'); n.setAttribute('aria-hidden', 'false'); n.focus({ preventScroll: true }); }, 1200);
+  setTimeout(function () { prevFocus = document.activeElement; n.classList.add('show'); bk.classList.add('show'); n.setAttribute('aria-hidden', 'false'); n.focus({ preventScroll: true }); try { localStorage.setItem(K, String(Date.now())); } catch (e) {} }, 1200);
   n.addEventListener('keydown', function (e) { if (e.key !== 'Tab') return; var f = [].slice.call(n.querySelectorAll('button')), k = f.indexOf(document.activeElement); e.preventDefault(); f[(k + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); });
 })();
 </script>
